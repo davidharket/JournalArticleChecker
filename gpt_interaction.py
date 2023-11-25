@@ -1,4 +1,4 @@
-import openai
+from openai import OpenAI
 
 
 # Function to ask GPT a question
@@ -12,15 +12,23 @@ def ask_gpt(question, additional_context, openai_api_key):
     Returns:
     str: The answer from the GPT model.
     """
-    openai.api_key = openai_api_key
-
     # Combine the scraped content with additional context
     prompt = f"{additional_context}\\n\\n{question}"
 
-    # Query GPT and return the response
-    response = openai.Completion.create(
-        engine="gpt-3.5-turbo",
-        prompt=prompt,
-        max_tokens=50000
+    # Query GPT and return the response | Keep in mind, API key must be passed via Authorization HTTP header (e.g., Authorization: Bearer OPENAI_API_KEY)
+    client = OpenAI()
+    
+    response = client.chat.completions.create(
+      model="gpt-3.5-turbo-16k",
+      messages=[
+        {
+          "role": "system",
+          "content": "You compare html data from databases on journal articles. The user will ask you a question, and you will use  the data provided from the HTML to assess it."
+        },
+        {
+          "role": "user",
+          "content": prompt
+        }
+      ]
     )
     return response.choices[0].text.strip()
