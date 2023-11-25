@@ -3,14 +3,31 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 import openai
 
-
 def get_all_links(url):
+    """
+    Retrieve all hyperlinks from the specified URL.
+
+    Args:
+    url (str): The URL from which to scrape the hyperlinks.
+
+    Returns:
+    list: A list of hyperlinks found on the specified webpage.
+    """
     response = requests.get(url)
     soup = BeautifulSoup(response.content, 'html.parser')
     return [link.get('href') for link in soup.find_all('a') if link.get('href')]
 
-
 def collect_text_to_file(url, filename):
+    """
+    Scrape and collect text from all links found at the given URL and save it to a file.
+
+    Args:
+    url (str): The URL from which to scrape text.
+    filename (str): The filename where the scraped text will be saved.
+
+    Returns:
+    None
+    """
     links = get_all_links(url)
     all_text_content = ""
 
@@ -30,25 +47,38 @@ def collect_text_to_file(url, filename):
         except requests.RequestException as e:
             print(f"Error during request to {full_link}: {e}")
 
-    # Writing to file
     with open(filename, 'w', encoding='utf-8') as file:
         file.write(all_text_content)
 
-
-# Function to read additional context from a .txt file
 def read_additional_context(file_path):
+    """
+    Read and return the content of the specified file.
+
+    Args:
+    file_path (str): The path to the file containing additional context.
+
+    Returns:
+    str: The content of the file.
+    """
     with open(file_path, 'r') as file:
         return file.read()
 
-
-# Function to ask GPT a question
 def ask_gpt(question, additional_context, openai_api_key):
+    """
+    Query the OpenAI GPT model with a specific question and additional context.
+
+    Args:
+    question (str): The question to be asked to the GPT model.
+    additional_context (str): Additional context to provide to the GPT model.
+    openai_api_key (str): The API key for OpenAI.
+
+    Returns:
+    str: The answer from the GPT model.
+    """
     openai.api_key = openai_api_key
 
-    # Combine the scraped content with additional context
     prompt = f"{additional_context}\\n\\n{question}"
 
-    # Query GPT and return the response
     response = openai.Completion.create(
         engine="gpt-3.5-turbo",
         prompt=prompt,
@@ -56,8 +86,6 @@ def ask_gpt(question, additional_context, openai_api_key):
     )
     return response.choices[0].text.strip()
 
-
-# Example usage
 if __name__ == "__main__":
     # URL to scrape
     url_to_scrape = "http://example.com"
