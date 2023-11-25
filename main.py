@@ -3,7 +3,7 @@ import file_operations
 import gpt_interaction
 
 # URL to scrape
-url_to_scrape = "https://link-springer-com./journal/42001/volumes-and-issues" #For example
+url_to_scrape = "https://link.springer.com/journal/42001/volumes-and-issues" #For example
 # File to store scraped content
 scraped_content_file = "scraped_content_journal_of_computational_social_science.txt"
 # OpenAI API Key
