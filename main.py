@@ -3,9 +3,9 @@ import file_operations
 import gpt_interaction
 
 # URL to scrape
-url_to_scrape = "http://example.com"
+url_to_scrape = "https://link-springer-com./journal/42001/volumes-and-issues" #For example
 # File to store scraped content
-scraped_content_file = "scraped_content.txt"
+scraped_content_file = "scraped_content_journal_of_computational_social_science.txt"
 # OpenAI API Key
 openai_api_key = "open_ai_api_key"
 
